@@ -132,7 +132,7 @@ class SewaController extends Controller
     public function actionAccept($id)
     {
         $model = $this->findModel($id);
-        $model->approve='Accepted';
+        $model->accept='Accepted';
         if ($model->save()) {
             return $this->redirect(['view', 'id' => $model->no_sewa]);
         }
@@ -144,7 +144,7 @@ class SewaController extends Controller
     public function actionNotaccept($id)
     {
         $model = $this->findModel($id);
-        $model->approve='Not Accepted';
+        $model->accept='Not Accepted';
         if ($model->save()) {
             return $this->redirect(['view', 'id' => $model->no_sewa]);
         }

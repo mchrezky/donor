@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'tgl_sewa',
             'tgl_selesai',
             'telpon',
-            'nama_pic',
+            'pic',
             'approve',
             'accept',
         ],
