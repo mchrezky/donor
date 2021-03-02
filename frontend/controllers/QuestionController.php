@@ -1,20 +1,16 @@
 <?php
 namespace frontend\controllers;
 use Yii;
-use common\models\Question;
-use common\models\Sewa;
-use common\models\VwSewa;
-use common\models\QuestionInspection;
-use common\models\Inspectionresult;
+use common\models\Donor;
 use yii\rest\ActiveController;
 use yii\base\ErrorException;
 use yii\base\Model;
 use common\models\LoginForm;
 use frontend\models\SignupForm;
 
-class QuestionController extends ActiveController
+class DonorController extends ActiveController
 {
-    public $modelClass = 'common\models\Question';
+    public $modelClass = 'common\models\Donor';
     public function actions()
     {
       $actions = parent::actions();
@@ -23,60 +19,36 @@ class QuestionController extends ActiveController
       protected function verbs()
         {
         return [
-           'question' => ['GET'],
+           'get' => ['GET'],
            'result' => ['GET'],
            'test' => ['GET'],
            'view' => ['GET'],
            'answers' => ['POST'],
         ];
       }
-      public function actionQuestion($id){
+      public function actionGet($id){
         \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;
-        $sewa = Sewa::findOne($id);
-        if($sewa){
-        $question = QuestionInspection::find()->where(['no_alat'=>  $sewa->no_alat])->all();
-          if(count($question) > 0 ){
-            return array('status' => true, 'data'=> $question);
+     
+        $Donor = Donor::find()->all();
+          if(count($Donor) > 0 ){
+            return array('status' => true, 'data'=> $Donor);
           }else{
-            return array('status'=>false,'data'=> 'No Alat Found');
+            return array('status'=>false,'data'=> 'No Donor Found');
           }
-        }else{
-          return array('status'=>false,'data'=> 'Params No Found');
-        }
+       
       }
-      public function actionResult($id){
-        \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;
-        $sewa = Sewa::findOne($id);
-        $sewas = VwSewa::find()->where(['no_sewa'=>  $id])->all();
-        if($sewa){
-        $question = QuestionInspection::find()->where(['no_alat'=>  $sewa->no_alat])->all();
-        $good = QuestionInspection::find()->where(['no_alat'=>  $sewa->no_alat])->andWhere(['result'=>'GOOD'])->all();
-        $notgood = QuestionInspection::find()->where(['no_alat'=>  $sewa->no_alat])->andWhere(['result'=>'NOT GOOD'])->all();
-        $answered = QuestionInspection::find()->where(['no_alat'=>  $sewa->no_alat])->andWhere('result != :result',['result'=>''])->all();
-        $null = QuestionInspection::find()->where(['no_alat'=>  $sewa->no_alat])->andWhere(['result'=>null])->all();
-        $result='';
-        if (count($notgood)==0) {
-          $result='PASSED';
-        }else{
-          $result='NOT PASSED';
-        }
-          if(count($question) > 0 ){
-            return array('status' => true,'tot_question'=>count($question),'tot_answer'=>count($answered),'tot_null'=>count($null),'tot_good'=>count($good),'tot_notgood'=>count($notgood),'result'=>$result, 'data'=> $sewas);
-          }else{
-            return array('status'=>false,'data'=> 'No Alat Found');
-          }
-        }else{
-          return array('status'=>false,'data'=> 'Params No Found');
-        }
-      }
-      public function actionAnswers(){
-         $model = new Inspectionresult();
+      public function actionPost(){
+         $model = new Donor();
          $params = Yii::$app->request->post();
-         $model->id_inspection = $params['id_sewa'].$params['id_question'];
-         $model->id_sewa = $params['id_sewa'];
-         $model->id_question = $params['id_question'];
+         $model->id_user = $params['id_user'];
+         $model->nama = $params['nama'];
+         $model->usia = $params['usia'];
          $model->result = $params['result'];
-         $model->cek_inspection = $params['cek_inspection'];
+         $model->jk = $params['jk'];
+         $model->tinggi_badan = $params['tinggi_badan'];
+         $model->berat_badan = $params['berat_badan'];
+         $model->tanggal = $params['tanggal'];
+         $model->status = "Active";
          if ($model->save()) {
              $response['message'] = 'Success Save!';
              $response['status'] = 1;
@@ -86,7 +58,7 @@ class QuestionController extends ActiveController
          } else {
                $model->validate();
                
-               $response['message'] = 'Incorrect username or password.';
+               $response['message'] = 'Error! Can\'t Save.';
                $response['status'] = 0;
                $response['errors'] = $model->getErrors();
                  return $response;
@@ -94,38 +66,12 @@ class QuestionController extends ActiveController
        }
       public function actionView($id){
         \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;
-        $user = User::find()->where(['id'=> $id])->all();
-        if(count($user) > 0 ){
-          return array('status' => true, 'data'=> $user);
+        $donor = Donor::find()->where(['id_donor'=> $id])->all();
+        if(count($donor) > 0 ){
+          return array('status' => true, 'data'=> $donor);
         }else{
           return array('status'=>false,'data'=> 'No EventList Found');
         }
       }
-      public function actionTest($id){
-        \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;
-        $idnya=0;
-        if($id=1){
-          $idnya = 'C-001';
-        // }else if($id=2){
-        //   $idnya = '1302';
-        // }else if($id=3){
-        //   $idnya = '1303';
-        // }else if($id=4){
-        //   $idnya = '1304';
-        // }else if($id=5){
-        //   $idnya = '1305';
-        }else{
-          $idnya = '1306';
-        }
-        $question = Question::find()->where(['no_alat'=> $idnya])->all();
-        if(count($question) > 0 ){
-          // $datas = array('page'=> $id,
-          // 'pages'=> 6,
-          // 'per_page'=> '50','total'=>count($question));
-          // return array($datas,$question);
-          return array('status' => true, 'data'=> $question);
-        }else{
-          return array('status'=>false,'data'=> 'No EventList Found');
-        }
-      }
+     
 }

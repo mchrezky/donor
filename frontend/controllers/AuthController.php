@@ -20,6 +20,7 @@ class AuthController extends ActiveController
         {
         return [
            'login' => ['POST'],
+           'signup' => ['POST'],
            'view' => ['GET'],
         ];
       }
@@ -42,6 +43,26 @@ class AuthController extends ActiveController
               $response['errors'] = $model->getErrors();
                 return $response;
         }
+      }
+      public function actionSignup(){
+        $model = new User();
+        $params = Yii::$app->request->post();
+        $model->email = $params['email'];
+        $model->username = $params['username'];
+        $model->level = "Member";
+        $model->setPassword($params['password']);
+        $model->generateAuthKey();
+        if ($model->save()) {
+            $response['message'] = 'You are now member!';
+            $response['user'] = User::findByUsername($model->username);
+            return $response;
+            }
+        else {
+              $model->validate();
+              $response['errors'] = $model->getErrors();
+                return $response;
+            }
+
       }
       public function actionView($id){
         \Yii::$app->response->format = \yii\web\Response:: FORMAT_JSON;

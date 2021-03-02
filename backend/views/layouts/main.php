@@ -40,33 +40,18 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']]];
 
-    }else{
-        if(Yii::$app->user->identity->level=='Admin'){
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        [
-            'label' => 'Data',
-            'items' => [
-                 ['label' => 'Users', 'url' => ['/users']],
-                 ['label' => 'Customer', 'url' => ['/customer']],
-                 ['label' => 'Alat', 'url' => ['/alat']],
-                 ['label' => 'Question', 'url' => ['/question']],
-                 ['label' => 'Sewa', 'url' => ['/sewa']],
-            ],
-        ],
-    ];
-    }else if(Yii::$app->user->identity->level=='QCHSE HEAD' or Yii::$app->user->identity->level=='MAINTENANCE HEAD'){
+    }else {
         $menuItems = [
             ['label' => 'Home', 'url' => ['/site/index']],
             [
                 'label' => 'Data',
                 'items' => [
-                     ['label' => 'Sewa', 'url' => ['/sewa']],
+                     ['label' => 'Data Donor', 'url' => ['/donor']],
                 ],
             ],
         ];
     }
-    }
+    
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
