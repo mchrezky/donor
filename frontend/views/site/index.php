@@ -13,7 +13,19 @@ $this->title = 'My Yii Application';
 
         <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
     </div>
+<<<<<<< HEAD
 
+=======
+    <table border='1'>
+        <?php for ($i=0; $i < 3 ; $i++) { ?>
+        <tr>
+            <?php for ($j=0; $j < 5 ; $j++) { ?>
+                <td><?= $i." ".$j ?></td>
+            <?php  } ?>
+        </tr>
+        <?php  } ?>
+    </table>
+>>>>>>> b13388c7f7624f8c1a4b4657568701a6f9ef8474
     <div class="body-content">
 
         <div class="row">

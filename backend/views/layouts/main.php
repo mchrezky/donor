@@ -20,7 +20,7 @@ AppAsset::register($this);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title>Donor</title>
     <?php $this->head() ?>
 </head>
 <body>
@@ -29,15 +29,31 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => "Donor",
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+    
+    if (Yii::$app->user->isGuest) {
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
+        ['label' => 'Home', 'url' => ['/site/index']]];
+
+    }else {
+        $menuItems = [
+            ['label' => 'Home', 'url' => ['/site/index']],
+            [
+                'label' => 'Data',
+                'items' => [
+                     ['label' => 'Data Donor', 'url' => ['/donor']],
+                       ['label' => 'Data Users', 'url' => ['/users']],
+                ],
+            ],
+            
+        ];
+    }
+    
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
